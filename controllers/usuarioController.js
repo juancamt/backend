@@ -7,24 +7,24 @@ var controllerUsuario = {
         var params = req.body;
 
         // Validar datos de entrada 
-        var validate_rol = !validator.isEmpty(params.rol);
+        // var validate_rol = !validator.isEmpty(params.rol);
         var validate_name = !validator.isEmpty(params.nombre);
-        var validate_pass = !validator.isEmpty(params.contraseña);
-        var validate_email = !validator.isEmpty(params.correo) && validator.isEmail(params.correo);
-        var validate_apellido = !validator.isEmpty(params.apellido);
-        var validate_telefono = !validator.isEmpty(params.telefono);
-        var validate_genero = !validator.isEmpty(params.genero);
-        var validate_años = !validator.isEmpty(params.años);
+        // var validate_pass = !validator.isEmpty(params.contraseña);
+        // var validate_email = !validator.isEmpty(params.correo) && validator.isEmail(params.correo);
+        // var validate_apellido = !validator.isEmpty(params.apellido);
+        // var validate_telefono = !validator.isEmpty(params.telefono);
+        // var validate_genero = !validator.isEmpty(params.genero);
+        // var validate_años = !validator.isEmpty(params.años);
 
 
-        if (validate_name &&
-            validate_pass && 
-            validate_rol && 
-            validate_email &&
-            validate_apellido &&
-            validate_telefono &&
-            validate_genero &&
-            validate_años
+        if (validate_name 
+            // validate_pass &&
+            // validate_rol && 
+            // validate_email &&
+            // validate_apellido &&
+            // validate_telefono &&
+            // validate_genero &&
+            // validate_años
         ) {
             try {
                 // Crear una nueva instancia de Usuario
@@ -60,7 +60,7 @@ var controllerUsuario = {
         }
     },
 // listar  usuarios 
-    listarUsuarios: async function (req, res) {
+    listarUsuarios: async function (req , res) {
         try {
             const usuarios = await Usuario.find();
             return res.status(200).send({
@@ -128,29 +128,29 @@ var controllerUsuario = {
     
         var validate_rol = !validator.isEmpty(params.rol);
         var validate_name = !validator.isEmpty(params.nombre);
-        var validate_pass = !validator.isEmpty(params.contraseña);
+        // var validate_pass = !validator.isEmpty(params.contraseña);
         var validate_email = !validator.isEmpty(params.correo) && validator.isEmail(params.correo);
         var validate_apellido = !validator.isEmpty(params.apellido);
-        var validate_telefono = !validator.isEmpty(params.telefono);
-        var validate_genero = !validator.isEmpty(params.genero);
-        var validate_años = !validator.isEmpty(params.años);
+        // var validate_telefono = !validator.isEmpty(params.telefono);
+        // var validate_genero = !validator.isEmpty(params.genero);
+        // var validate_años = !validator.isEmpty(params.años);
 
 
         if (validate_name &&
-            validate_pass && 
             validate_rol && 
             validate_email &&
-            validate_apellido &&
-            validate_telefono &&
-            validate_genero &&
-            validate_años
+            validate_apellido
+            // validate_pass && 
+            // validate_telefono &&
+            // validate_genero &&
+            // validate_años
         ) {
             var update = {
-                nombre: params.nombre,
-                contraseña: params.contraseña,
-                correo: params.correo,
                 rol: params.rol,
+                nombre: params.nombre,
                 apellido: params.apellido,
+                correo: params.correo,
+                contraseña: params.contraseña,
                 telefono: params.telefono,
                 genero: params.genero,
                 años: params.años                

@@ -13,6 +13,7 @@ var controllerEmpleado = {
         var validate_apellido = !validator.isEmpty(params.apellido);
         var validate_telefono = !validator.isEmpty(params.telefono);
         var validate_genero = !validator.isEmpty(params.genero);
+        var validate_direccion = !validator.isEmpty(params.direccion);
 
 
         if (validate_name &&
@@ -20,7 +21,8 @@ var controllerEmpleado = {
             validate_email &&
             validate_apellido &&
             validate_telefono &&
-            validate_genero
+            validate_genero&&
+            validate_direccion
         ) {
             try {
                 // Crear una nueva instancia de Usuario
@@ -31,6 +33,7 @@ var controllerEmpleado = {
                     apellido: params.apellido,
                     telefono: params.telefono,
                     genero: params.genero,
+                    direccion :params.direccion
                 });
 
                 // Guardar el usuario

@@ -36,7 +36,8 @@ var controllerUsuario = {
                     apellido: params.apellido,
                     telefono: params.telefono,
                     genero: params.genero,
-                    años: params.años
+                    años: params.años,
+                    direccion:params.direccion
                 });
 
                 // Guardar el usuario
@@ -126,7 +127,7 @@ var controllerUsuario = {
         var params = req.body;
         var usuarioId = req.params.id;
     
-        var validate_rol = !validator.isEmpty(params.rol);
+        // var validate_rol = !validator.isEmpty(params.rol);
         var validate_name = !validator.isEmpty(params.nombre);
         // var validate_pass = !validator.isEmpty(params.contraseña);
         var validate_email = !validator.isEmpty(params.correo) && validator.isEmail(params.correo);
@@ -137,7 +138,7 @@ var controllerUsuario = {
 
 
         if (validate_name &&
-            validate_rol && 
+            // validate_rol && 
             validate_email &&
             validate_apellido
             // validate_pass && 

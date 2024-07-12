@@ -9,7 +9,8 @@ var UsuarioSchema = Schema({
     apellido:String,
     telefono: Number,
     genero: String,
-    años: Number
+    años: Number,
+    direccion:String
 });
 
 module.exports = mongoose.model("Usuario", UsuarioSchema);

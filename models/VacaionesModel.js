@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var VacacionesSchema = new Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     fechaInicio: Date,
     fechaFin: Date,
-    motivo: String,
-    // empleado: { type: Schema.Types.ObjectId, ref: 'Empleado' }
+    estado: String,
 });
 
 module.exports = mongoose.model("Vacaciones", VacacionesSchema);

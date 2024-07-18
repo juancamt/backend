@@ -1,7 +1,29 @@
 const Permission = require('../models/permisosModel');
+const moment = require('moment');
 
 var controllerPermiso = {
 
+  listarPermisos: async function (req, res) {
+    try {
+        const permisos = await Permission.find().populate('user', 'nombre apellido'); // Busca todos los permisos en la base de datos
+
+        // Formatear la fecha para cada permiso
+        const permisosFormateados = permisos.map(permiso => {
+            const fechaFormateadaStart = moment(permiso.startDate).format('YYYY-MM-DD'); 
+            const fechaFormateadaEND = moment(permiso.endDate).format('YYYY-MM-DD'); 
+            return {
+                ...permiso._doc, // Copiar los otros campos del permiso
+                startDate: fechaFormateadaStart, // Reemplazar la fecha con la fecha formateada
+                endDate: fechaFormateadaEND // Reemplazar la fecha con la fecha formateada
+            };
+        });
+
+        res.json(permisosFormateados); // Devuelve los permisos formateados como respuesta JSON
+    } catch (error) {
+        console.error('Error al obtener permisos:', error);
+        res.status(500).json({ message: 'Error al obtener permisos' });
+    }
+},
 
     // Guardar datos
     save: async function (req, res) {

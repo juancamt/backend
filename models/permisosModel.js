@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const permissionSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   content: { type: String, required: true }

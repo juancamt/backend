@@ -11,6 +11,7 @@ const Usuario = require('./models/UsuarioModel')
 
 const usuario_routes = require("./routes/usuarios");
 const permiso_routes = require("./routes/permisos");
+const vacaciones_routes = require("./routes/vacaciones");
 
 
 // const equipo_routes = require("./router/equipo");
@@ -89,9 +90,9 @@ mongoose.connect("mongodb://localhost:27017/gestion", {
        
         app.use("/api", usuario_routes);
         app.use("/api",permiso_routes);
+        app.use("/api",vacaciones_routes);
        
     
-        // app.use("/api",_routes);
         // app.use("/api",_routes);
 
         app.listen(port, () => {

@@ -12,10 +12,10 @@ const Usuario = require('./models/UsuarioModel')
 const usuario_routes = require("./routes/usuarios");
 const permiso_routes = require("./routes/permisos");
 const vacaciones_routes = require("./routes/vacaciones");
+// const registros_routes = require("./routes/registros");
 
 
-// const equipo_routes = require("./router/equipo");
-// const partido_routes = require("./router/partido");
+
 
 mongoose.Promise = global.Promise;
 
@@ -57,7 +57,7 @@ mongoose.connect("mongodb://localhost:27017/gestion", {
                 if (contra !== user.contraseña) {
                     return res.status(400).send('Contraseña incorrecta');
                 }
-                req.session.user = { id: user._id, username: user.nombre }; // Asegúrate de que el userId se establece correctamente
+                req.session.user = { id: user._id, username: user.nombre }; // Asegúrarse de que el userId se establece correctamente
                 console.log('Sesión del usuario:', req.session.user); // Línea de depuración
                 // req.session.user = user;
                 res.json({ message: 'Login exitoso', user });
@@ -91,9 +91,9 @@ mongoose.connect("mongodb://localhost:27017/gestion", {
         app.use("/api", usuario_routes);
         app.use("/api",permiso_routes);
         app.use("/api",vacaciones_routes);
+        // app.use("/api",registros_routes);
        
     
-        // app.use("/api",_routes);
 
         app.listen(port, () => {
             console.log("servidor corriendo en el puerto", port);

@@ -3,6 +3,29 @@ const moment = require('moment');
 
 var VacacionesPermiso ={
 
+
+    listarVacaciones: async function (req, res) {
+        try {
+            const vacaciones = await Vacaciones.find().populate('user', 'nombre apellido'); // Busca todas las vacaciones en la base de datos
+    
+            // Formatear la fecha para cada vacacion
+            const vacionesFormateadas = vacaciones.map(vacacione => {
+                const fechaFormateadaStart = moment(vacacione.fechaInicio).format('YYYY-MM-DD'); 
+                const fechaFormateadaEND = moment(vacacione.fechaFin).format('YYYY-MM-DD'); 
+                return {
+                    ...vacacione._doc, // Copiar los otros campos del permiso
+                    fechaInicio: fechaFormateadaStart, // Reemplazar la fecha con la fecha formateada
+                    fechaFin: fechaFormateadaEND // Reemplazar la fecha con la fecha formateada
+                };
+            });
+    
+            res.json(vacionesFormateadas); // Devuelve las vacaciones formateados como respuesta JSON
+        } catch (error) {
+            console.error('Error al obtener vacaciones:', error);
+            res.status(500).json({ message: 'Error al obtener vacaciones' });
+        }
+    },
+
      // Guardar datos
      save: async function (req, res) {
         const { fechaInicio, fechaFin, estado } = req.body;
@@ -50,6 +73,24 @@ var VacacionesPermiso ={
             res.status(500).json({ message: 'Error al buscar vacaciones' });
         }
     },
+    // eliminar datos
+    borrarVacacion: async function (req, res) {
+        const VacacionId = req.params.id;
+    
+        try {
+          // Buscar el Vacacion por ID y eliminarlo
+          const deletedVacacion = await Vacaciones.findByIdAndDelete(VacacionId);
+    
+          if (!deletedVacacion) {
+            return res.status(404).json({ message: 'Vacacion no encontrado' });
+          }
+    
+          res.status(200).json({ message: 'Vacacion eliminado correctamente', deletedVacacion });
+        } catch (error) {
+          console.error('Error al eliminar Vacacion:', error);
+          res.status(500).json({ message: 'Error al eliminar Vacacion' });
+        }
+      }
 
 }
 module.exports = VacacionesPermiso;

@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config()
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -12,10 +13,13 @@ const Usuario = require('./models/UsuarioModel')
 const usuario_routes = require("./routes/usuarios");
 const permiso_routes = require("./routes/permisos");
 const vacaciones_routes = require("./routes/vacaciones");
-// const registros_routes = require("./routes/registros");
+const registros_routes = require("./routes/registros");
 
+const uri = process.env.MONGODB_URI;
 
-
+if(!uri){
+    console.log("No se encontro la variable de entorno MONGODB_URI");
+}
 
 mongoose.Promise = global.Promise;
 
@@ -25,13 +29,14 @@ app.use(cors({
     origin: 'http://localhost:3000', // Reemplaza con la URL del frontend
     credentials: true
 }));
-mongoose.connect("mongodb://localhost:27017/gestion", {
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     family: 4
 
 })
     .then(() => {
+        console.log('Conectado a MongoDB Atlas');
         app.use(express.json());
         app.use(cookieParser());
         app.use(session({
@@ -91,7 +96,7 @@ mongoose.connect("mongodb://localhost:27017/gestion", {
         app.use("/api", usuario_routes);
         app.use("/api",permiso_routes);
         app.use("/api",vacaciones_routes);
-        // app.use("/api",registros_routes);
+        app.use("/api",registros_routes);
        
     
 

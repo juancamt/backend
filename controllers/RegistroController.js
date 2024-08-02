@@ -79,5 +79,59 @@ var controllerRegistro = {
             res.status(500).json({ message: 'Error al buscar registro' });
         }
     },
+    // mostrar registros salida
+    mostrarRegistrosSalida: async function (req, res) {
+        const userId = req.session.user && req.session.user.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Usuario no autenticado' });
+        }
+
+        try {
+            const registroSalida = await RegistroUsuarioSalida.find({ user: userId });
+            res.json(registroSalida); // Enviar todos los registro encontrados como respuesta
+            console.log(registroSalida);
+
+        } catch (error) {
+            console.error('Error al buscar registro:', error);
+            res.status(500).json({ message: 'Error al buscar registro' });
+        }
+    },
+    // eliminar registro Salida
+    eliminarRegistrosSalida: async function (req, res) {
+        const registroSalidaId = req.params.id;
+    
+        try {
+          // Buscar el Vacacion por ID y eliminarlo
+          const deletedRegistroSalida = await RegistroUsuarioSalida.findByIdAndDelete(registroSalidaId);
+    
+          if (!deletedRegistroSalida) {
+            return res.status(404).json({ message: 'Registro no encontrado' });
+          }
+    
+          res.status(200).json({ message: 'Registro eliminado correctamente', deletedRegistroSalida });
+        } catch (error) {
+          console.error('Error al eliminar Registro:', error);
+          res.status(500).json({ message: 'Error al eliminar Registro' });
+        }
+      },
+    // eliminar registro
+    eliminarRegistros: async function (req, res) {
+        const registroId = req.params.id;
+    
+        try {
+          // Buscar el Vacacion por ID y eliminarlo
+          const deletedRegistro = await RegistroUsuario.findByIdAndDelete(registroId);
+    
+          if (!deletedRegistro) {
+            return res.status(404).json({ message: 'Registro no encontrado' });
+          }
+    
+          res.status(200).json({ message: 'Registro eliminado correctamente', deletedRegistro });
+        } catch (error) {
+          console.error('Error al eliminar Registro:', error);
+          res.status(500).json({ message: 'Error al eliminar Registro' });
+        }
+      },
 }
 module.exports = controllerRegistro;

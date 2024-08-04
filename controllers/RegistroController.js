@@ -1,10 +1,49 @@
+const moment = require("moment");
 const RegistroUsuario = require("../models/RegistroModel");
 const RegistroUsuarioSalida = require("../models/RegistroSalidaModel");
 
 var controllerRegistro = {
 
+    listarRegistros: async function (req, res) {
+        try {
+            const registros = await RegistroUsuario.find().populate('user', 'nombre apellido'); // Busca todos los registros en la base de datos
+    
+            // Formatear la fecha para cada permiso
+            const registroFormateados = registros.map(registro => {
+                return {
+                    ...registro._doc, // Copiar los otros campos del registro
+                    
+                };
+            });
+    
+            res.json(registroFormateados); // Devuelve los registros formateados como respuesta JSON
+        } catch (error) {
+            console.error('Error al obtener registros:', error);
+            res.status(500).json({ message: 'Error al obtener registros' });
+        }
+    },
+    listarRegistrosSalida: async function (req, res) {
+        try {
+            const registros = await RegistroUsuarioSalida.find().populate('user', 'nombre apellido'); // Busca todos los registros en la base de datos
+    
+            // Formatear la fecha para cada permiso
+            const registroFormateados = registros.map(registroSalida => {
+                return {
+                    ...registroSalida._doc, // Copiar los otros campos del registro
+                    
+                };
+            });
+    
+            res.json(registroFormateados); // Devuelve los registros formateados como respuesta JSON
+        } catch (error) {
+            console.error('Error al obtener registros:', error);
+            res.status(500).json({ message: 'Error al obtener registros' });
+        }
+    },
+
     // Guardar datos ingreso 
     save: async function (req, res) {
+        
         const { fechaInicio, estado } = req.body;
         console.log('Sesión completa:', req.session); // Línea de depuración
         const userId = req.session.user && req.session.user.id; // Obtener userId de la sesión
@@ -72,7 +111,6 @@ var controllerRegistro = {
         try {
             const registro = await RegistroUsuario.find({ user: userId });
             res.json(registro); // Enviar todos los registro encontrados como respuesta
-            console.log(registro);
 
         } catch (error) {
             console.error('Error al buscar registro:', error);
@@ -90,7 +128,6 @@ var controllerRegistro = {
         try {
             const registroSalida = await RegistroUsuarioSalida.find({ user: userId });
             res.json(registroSalida); // Enviar todos los registro encontrados como respuesta
-            console.log(registroSalida);
 
         } catch (error) {
             console.error('Error al buscar registro:', error);
@@ -113,6 +150,7 @@ var controllerRegistro = {
         } catch (error) {
           console.error('Error al eliminar Registro:', error);
           res.status(500).json({ message: 'Error al eliminar Registro' });
+          
         }
       },
     // eliminar registro

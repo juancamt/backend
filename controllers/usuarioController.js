@@ -183,8 +183,8 @@ var controllerUsuario = {
                 status: "error"
             });
         }
-    }
-    
+    },
+ 
     
 };
 

@@ -65,6 +65,9 @@ mongoose.connect(uri, {
                 req.session.user = { id: user._id, username: user.nombre }; // Asegúrarse de que el userId se establece correctamente
                 console.log('Sesión del usuario:', req.session.user); // Línea de depuración
                 // req.session.user = user;
+                user.isOnline = true;
+                await user.save(); // Guardar el estado actualizado del usuario en la base de datos
+            
                 res.json({ message: 'Login exitoso', user });
             } catch (error) {
                 console.log(error);
@@ -80,18 +83,54 @@ mongoose.connect(uri, {
             res.send(req.session.user);
         });
     
-        // Ruta de logout
-        app.post('/logout', (req, res) => {
-            
-            req.session.destroy(err => {
+   
+        app.post('/logout', async (req, res) => {
+            try {
+              // Encuentra el usuario actual basado en la sesión
+              const userId = req.session.user.id;
+              const user = await Usuario.findById(userId);
+              
+              if (!user) {
+                return res.status(400).send('Usuario no encontrado');
+              }
+              
+              // Destruye la sesión del usuario
+              req.session.destroy(async (err) => {
                 if (err) {
-                    return res.status(500).send('Error al cerrar sesión');
+                  return res.status(500).send('Error al cerrar sesión');
                 }
+                
+                // Actualiza el estado en línea del usuario
+                user.isOnline = false;
+                await user.save();
+                
+                // Limpia las cookies y envía la respuesta
                 res.clearCookie('connect.sid');
                 res.send('Logout exitoso');
-            });
-        });
-    
+              });
+            } catch (error) {
+              console.error('Error al cerrar sesión:', error);
+              res.status(500).send('Error en el servidor');
+            }
+          });
+
+        app.get('/isOnline/:userId', async (req, res) => {
+            try {
+              const user = await Usuario.findById(req.params.userId);
+              if (user) {
+                console.log('User found:', user);
+                console.log('User status:', user.isOnline);
+                res.json({ isOnline: user.isOnline });
+              } else {
+                res.status(404).json({ message: 'User not found' });
+              }
+            } catch (error) {
+              console.error('Error fetching user status:', error);
+              res.status(500).json({ message: 'Error fetching user status' });
+            }
+          });
+          
+
        
         app.use("/api", usuario_routes);
         app.use("/api",permiso_routes);

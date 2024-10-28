@@ -26,7 +26,7 @@ mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cors({
-  origin: 'http://localhost:3000', // Reemplaza con la URL del frontend
+  origin: 'https://my-app-9jfk.onrender.com', // Reemplaza con la URL del frontend
   credentials: true
 }));
 mongoose.connect(uri, {

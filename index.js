@@ -43,7 +43,7 @@ mongoose.connect(uri, {
       secret: 'your_secret_key',
       resave: false,
       saveUninitialized: true,
-      cookie: { secure: false, httpOnly: true } // En producción, debes configurar secure a true
+      cookie: { secure: true, httpOnly: true } // En producción, debes configurar secure a true
     }));
 
     app.post('/login', async (req, res) => {

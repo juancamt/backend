@@ -43,12 +43,12 @@ mongoose.connect(uri, {
       secret: 'your_secret_key',
       resave: false,
       saveUninitialized: true,
-      cookie: { secure: true, httpOnly: true } // En producción, debes configurar secure a true
+      cookie: { secure: false, httpOnly: true } // En producción, debes configurar secure a true
     }));
 
     app.post('/login', async (req, res) => {
       const { email, contra, role, } = req.body;
-      console.log('Correo:', email, 'Contraseña:', contra, 'Rol:', role); // Debugging line
+      // console.log('Correo:', email, 'Contraseña:', contra, 'Rol:', role); // Debugging line
       try {
         const user = await Usuario.findOne({ correo: email });
         // req.session.user = { id: user.id, username: user.nombre };
@@ -63,7 +63,7 @@ mongoose.connect(uri, {
           return res.status(400).send('Contraseña incorrecta');
         }
         req.session.user = { id: user._id, username: user.nombre }; // Asegúrarse de que el userId se establece correctamente
-        console.log('Sesión del usuario:', req.session.user); // Línea de depuración
+        // console.log('Sesión del usuario:', req.session.user); // Línea de depuración
         // req.session.user = user;
         user.isOnline = true;
         await user.save(); // Guardar el estado actualizado del usuario en la base de datos

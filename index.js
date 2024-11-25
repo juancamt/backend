@@ -15,6 +15,8 @@ const permiso_routes = require("./routes/permisos");
 const vacaciones_routes = require("./routes/vacaciones");
 const registros_routes = require("./routes/registros");
 
+const MongoStore = require('connect-mongo');
+
 const uri = process.env.MONGODB_URI;
 
 if (!uri) {
@@ -30,8 +32,6 @@ app.use(cors({
   credentials: true
 }));
 mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   family: 4
 
 })
@@ -42,8 +42,12 @@ mongoose.connect(uri, {
     app.use(session({
       secret: 'your_secret_key',
       resave: false,
-      saveUninitialized: true,
-      cookie: { secure: false, httpOnly: true } // En producción, debes configurar secure a true
+      saveUninitialized: false,
+      cookie: { secure: true, httpOnly: true ,maxAge: 24 * 60 * 60 * 1000},// En producción,  configurar secure a true
+      store: MongoStore.create({
+        mongoUrl: uri,
+        ttl: 1 * 24 * 60 * 60 // Expiración de sesiones en segundos (1 días)
+      }) 
     }));
 
     app.post('/login', async (req, res) => {

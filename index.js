@@ -44,13 +44,13 @@ mongoose.connect(uri, {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: true,
+        secure: false,
         httpOnly: true,
         maxAge: 5 * 60 * 1000
       },// En producción,  configurar secure a true
       store: MongoStore.create({
         mongoUrl: uri,
-        ttl:5 * 60 // Expiración de sesiones en segundos (1 días)
+        ttl:5 * 60 // Expiración de sesiones
       })
     }));
 
@@ -156,6 +156,8 @@ mongoose.connect(uri, {
       } catch (error) {
         console.error('Error al cerrar sesión:', error);
         res.status(500).send('Error en el servidor');
+        user.isOnline = false;
+        await user.save();
       }
     });
 

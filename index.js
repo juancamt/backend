@@ -43,11 +43,15 @@ mongoose.connect(uri, {
       secret: 'your_secret_key',
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: true, httpOnly: true ,maxAge: 24 * 60 * 60 * 1000},// En producción,  configurar secure a true
+      cookie: {
+        secure: true,
+        httpOnly: true,
+        maxAge: 5 * 60 * 1000
+      },// En producción,  configurar secure a true
       store: MongoStore.create({
         mongoUrl: uri,
         ttl: 1 * 24 * 60 * 60 // Expiración de sesiones en segundos (1 días)
-      }) 
+      })
     }));
 
     app.post('/login', async (req, res) => {
@@ -88,14 +92,50 @@ mongoose.connect(uri, {
     });
 
 
+    // app.post('/logout', async (req, res) => {
+    //   try {
+    //     // Encuentra el usuario actual basado en la sesión
+    //     const userId = req.session.user.id;
+    //     const user = await Usuario.findById(userId);
+
+    //     if (!user) {
+
+    //       return res.status(400).send('Usuario no encontrado');
+    //     }
+
+    //     // Destruye la sesión del usuario
+    //     req.session.destroy(async (err) => {
+    //       if (err) {
+    //         return res.status(500).send('Error al cerrar sesión');
+    //       }
+
+    //       // Actualiza el estado en línea del usuario
+    //       user.isOnline = false;
+    //       await user.save();
+
+    //       // Limpia las cookies y envía la respuesta
+    //       res.clearCookie('connect.sid');
+    //       res.send('Logout exitoso');
+    //     });
+    //   } catch (error) {
+    //     console.error('Error al cerrar sesión:', error);
+    //     res.status(500).send('Error en el servidor');
+    //     user.isOnline = false;
+    //     await user.save();
+    //   }
+    // });
     app.post('/logout', async (req, res) => {
       try {
+        // Verifica si la sesión y el usuario existen
+        if (!req.session || !req.session.user) {
+          return res.status(400).send('No hay sesión activa o usuario no autenticado.');
+        }
+
         // Encuentra el usuario actual basado en la sesión
         const userId = req.session.user.id;
         const user = await Usuario.findById(userId);
 
         if (!user) {
-
           return res.status(400).send('Usuario no encontrado');
         }
 
@@ -116,10 +156,9 @@ mongoose.connect(uri, {
       } catch (error) {
         console.error('Error al cerrar sesión:', error);
         res.status(500).send('Error en el servidor');
-        user.isOnline = false;
-        await user.save();
       }
     });
+
 
     app.get('/isOnline/:userId', async (req, res) => {
       try {

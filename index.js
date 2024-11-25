@@ -50,7 +50,7 @@ mongoose.connect(uri, {
       },// En producción,  configurar secure a true
       store: MongoStore.create({
         mongoUrl: uri,
-        ttl: 1 * 24 * 60 * 60 // Expiración de sesiones en segundos (1 días)
+        ttl:5 * 60 // Expiración de sesiones en segundos (1 días)
       })
     }));
 
